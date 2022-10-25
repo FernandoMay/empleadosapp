@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-const primaryColor = Color(0xff54BAB9);
-const secondaryColor = Color(0xff18978F);
-const bgLightColor = Color(0xFFF7ECDE);
-const lightColor = Color(0xffE9DAC1);
-const dangerColor = Color(0xffF94C66);
-const successColor = Color(0xff53BF9D);
-const textColor = Color(0xff1B2430);
-const greyLightColor = Color(0xffE1E4E8);
+const primaryColor = Color(0xFF54BAB9);
+const secondaryColor = Color(0xFF00ABB3);
+const bgLightColor = Color(0xFFEAEAEA);
+const lightColor = Color(0xFFE9DAC1);
+const dangerColor = Color(0xFFF94C66);
+const successColor = Color(0xFF53BF9D);
+const textColor = Color(0xFF3C4048);
+const greyLightColor = Color(0xFFB2B2B2);
 const primaryGradientColor = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,

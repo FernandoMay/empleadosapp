@@ -51,7 +51,7 @@ class Empleado {
       );
 
   Map<String, dynamic> toJson() => {
-        // "id": id,
+        "id": id,
         "nombre": nombre,
         "apellidop": apellidop,
         "apellidom": apellidom,

@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 CupertinoThemeData ctheme() {
   return const CupertinoThemeData(
     primaryColor: primaryColor,
+    scaffoldBackgroundColor: CupertinoColors.systemBackground,
     textTheme: CupertinoTextThemeData(
       primaryColor: secondaryColor,
     ),

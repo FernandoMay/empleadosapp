@@ -26,45 +26,57 @@ Future<List<Empleado>> getEmpleados() async {
 
 Future<bool> createEmpleado(Empleado data) async {
   final response = await client.post(
-      Uri.https(
+      Uri.http(
         baseUrl,
         "/api/empleados",
-        {"content-type": "application/json"},
       ),
-      body: data.toJson());
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        'Content-Type': 'application/json',
+        'Accept': '*/*'
+      },
+      body: json.encode(data.toJson()));
   if (response.statusCode == 200) {
     return true;
   } else {
-    return false;
+    throw Exception('Failed ${response.reasonPhrase}');
   }
 }
 
 Future<bool> updateEmpleado(Empleado data) async {
   final response = await client.put(
-      Uri.https(
+      Uri.http(
         baseUrl,
-        "/api/empleados${data.id}",
-        {"content-type": "application/json"},
+        "/api/empleados/${data.id}",
       ),
-      body: data.toJson());
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        'Content-Type': 'application/json',
+        'Accept': '*/*'
+      },
+      body: json.encode(data.toJson()));
   if (response.statusCode == 200) {
     return true;
   } else {
-    return false;
+    throw Exception('Failed ${response.reasonPhrase}');
   }
 }
 
 Future<bool> deleteEmpleado(int id) async {
   final response = await client.delete(
-    Uri.https(
+    Uri.http(
       baseUrl,
-      "/api/empleados$id",
-      {"content-type": "application/json"},
+      "/api/empleados/$id",
     ),
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      'Content-Type': 'application/json',
+      'Accept': '*/*'
+    },
   );
   if (response.statusCode == 200) {
     return true;
   } else {
-    return false;
+    throw Exception('Failed ${response.reasonPhrase}');
   }
 }

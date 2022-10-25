@@ -1,27 +1,39 @@
+import 'package:empleados/addemployee.dart';
 import 'package:empleados/constants.dart';
 import 'package:empleados/home.dart';
 import 'package:empleados/models.dart';
 import 'package:empleados/services.dart';
 import 'package:flutter/cupertino.dart';
 
-class AddEmployee extends StatefulWidget {
-  const AddEmployee({super.key});
+class EditEmployee extends StatefulWidget {
+  const EditEmployee({super.key, required this.actual});
+
+  final Empleado actual;
 
   @override
-  _AddEmployeeState createState() => _AddEmployeeState();
+  _EditEmployeeState createState() => _EditEmployeeState();
 }
 
-class _AddEmployeeState extends State<AddEmployee> {
+class _EditEmployeeState extends State<EditEmployee> {
   final TextEditingController nombreController = TextEditingController();
   final TextEditingController apellidoPController = TextEditingController();
   final TextEditingController apellidoMController = TextEditingController();
   final TextEditingController areaController = TextEditingController();
   final TextEditingController fechaNacController = TextEditingController();
   int sueldo = 0;
-  DateTime fecha = DateTime.now();
+  late int id;
+  late DateTime fecha;
   @override
   void initState() {
     super.initState();
+    id = widget.actual.id!;
+    nombreController.text = widget.actual.nombre;
+    apellidoPController.text = widget.actual.apellidop;
+    apellidoMController.text = widget.actual.apellidom;
+    areaController.text = widget.actual.area;
+    fechaNacController.text = widget.actual.fechanac.toString();
+    sueldo = widget.actual.sueldo;
+    fecha = widget.actual.fechanac;
   }
 
   void _showDialog(Widget child) {
@@ -101,7 +113,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                       controller: nombreController,
                       cursorColor: primaryColor,
                       keyboardType: TextInputType.text,
-                      placeholder: "Nombre",
+                      placeholder: widget.actual.nombre,
                       prefix: Container(
                           height: 20.0,
                           margin: const EdgeInsets.only(left: 12.0),
@@ -133,7 +145,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                       controller: apellidoPController,
                       cursorColor: primaryColor,
                       keyboardType: TextInputType.text,
-                      placeholder: "Apellido Paterno",
+                      placeholder: widget.actual.apellidop,
                       prefix: Container(
                           height: 20.0,
                           margin: const EdgeInsets.only(left: 12.0),
@@ -165,7 +177,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                       controller: apellidoMController,
                       cursorColor: primaryColor,
                       keyboardType: TextInputType.text,
-                      placeholder: "Apellido Materno",
+                      placeholder: widget.actual.apellidom,
                       prefix: Container(
                           height: 20.0,
                           margin: const EdgeInsets.only(left: 12.0),
@@ -197,7 +209,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                       controller: areaController,
                       cursorColor: primaryColor,
                       keyboardType: TextInputType.text,
-                      placeholder: "Área",
+                      placeholder: widget.actual.area,
                       prefix: Container(
                           height: 20.0,
                           margin: const EdgeInsets.only(left: 12.0),
@@ -230,7 +242,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                       maxLength: 23,
                       onTap: () => _showDialog(
                         CupertinoDatePicker(
-                          initialDateTime: DateTime.now(),
+                          initialDateTime: fecha,
                           mode: CupertinoDatePickerMode.date,
                           use24hFormat: true,
                           maximumDate: DateTime.now(),
@@ -244,7 +256,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                       ),
                       cursorColor: primaryColor,
                       keyboardType: TextInputType.datetime,
-                      placeholder: "Fecha de Nacimiento",
+                      placeholder: widget.actual.fechanac.toString(),
                       prefix: Container(
                           height: 20.0,
                           margin: const EdgeInsets.only(left: 12.0),
@@ -276,7 +288,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                       // controller: sueldoController,
                       cursorColor: primaryColor,
                       keyboardType: TextInputType.number,
-                      placeholder: "Sueldo",
+                      placeholder: widget.actual.sueldo.toString(),
                       prefix: Container(
                           height: 20.0,
                           margin: const EdgeInsets.only(left: 12.0),
@@ -300,7 +312,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                   child: CupertinoButton(
                     color: secondaryColor,
                     // padding: EdgeInsets.symmetric(horizontal: size.width * 0.25),
-                    child: const Text("Agregar empleado"),
+                    child: const Text("Actualizar empleado"),
                     onPressed: () async {
                       if (nombreController.text.isEmpty ||
                           apellidoPController.text.isEmpty ||
@@ -312,20 +324,20 @@ class _AddEmployeeState extends State<AddEmployee> {
                             context: context,
                             message: "Ingrese todos los datos");
                       } else {
-                        Empleado nuevo = Empleado(
+                        Empleado actual = Empleado(
+                            id: widget.actual.id,
                             nombre: nombreController.text,
                             apellidop: apellidoPController.text,
                             apellidom: apellidoMController.text,
                             area: areaController.text,
                             fechanac: fecha,
                             sueldo: sueldo);
-                        await createEmpleado(nuevo)
-                            ? Navigator.push(
-                                context,
+                        await updateEmpleado(actual)
+                            ? Navigator.of(context).pushAndRemoveUntil(
                                 CupertinoPageRoute(
                                   builder: (context) => const Home(),
                                 ),
-                              )
+                                (route) => false)
                             : showCupertinoSnackBar(
                                 context: context, message: "error :(");
                       }
@@ -339,39 +351,4 @@ class _AddEmployeeState extends State<AddEmployee> {
       ),
     );
   }
-}
-
-void showCupertinoSnackBar({
-  required BuildContext context,
-  required String message,
-  int durationMillis = 3000,
-}) {
-  final overlayEntry = OverlayEntry(
-    builder: (context) => Positioned(
-      bottom: 8.0,
-      left: 8.0,
-      right: 8.0,
-      child: CupertinoPopupSurface(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 8.0,
-            vertical: 8.0,
-          ),
-          child: Text(
-            message,
-            style: const TextStyle(
-              fontSize: 14.0,
-              color: CupertinoColors.secondaryLabel,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ),
-      ),
-    ),
-  );
-  Future.delayed(
-    Duration(milliseconds: durationMillis),
-    overlayEntry.remove,
-  );
-  Overlay.of(Navigator.of(context).context)?.insert(overlayEntry);
 }

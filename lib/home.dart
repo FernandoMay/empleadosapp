@@ -1,5 +1,6 @@
 import 'package:empleados/addemployee.dart';
 import 'package:empleados/constants.dart';
+import 'package:empleados/editemployee.dart';
 import 'package:empleados/models.dart';
 import 'package:empleados/services.dart';
 import 'package:flutter/cupertino.dart';
@@ -29,8 +30,15 @@ class _HomeState extends State<Home> {
           style: tsH2White,
         ),
         backgroundColor: primaryColor.withOpacity(0.5),
-        leading: Padding(
+        leading: CupertinoButton(
           padding: const EdgeInsets.all(8.0),
+          onPressed: () {
+            Navigator.of(context).pushAndRemoveUntil(
+                CupertinoPageRoute(
+                  builder: (context) => const Home(),
+                ),
+                (route) => false);
+          },
           child: ClipRRect(
             borderRadius: BorderRadius.circular(18),
             child: Image.network("https://picsum.photos/180"),
@@ -39,7 +47,7 @@ class _HomeState extends State<Home> {
         trailing: CupertinoButton(
           onPressed: () => Navigator.of(context).push(
             CupertinoPageRoute(
-              builder: (context) => AddEmployee(),
+              builder: (context) => const AddEmployee(),
             ),
           ),
           padding: EdgeInsets.zero,
@@ -56,8 +64,87 @@ class _HomeState extends State<Home> {
                 return ListView.builder(
                     itemCount: data?.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return EmpleadoCard(
-                        empleado: data![index],
+                      return Dismissible(
+                        background: Container(
+                          color: successColor,
+                          alignment: Alignment.centerLeft,
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: const Icon(CupertinoIcons.pencil,
+                              color: CupertinoColors.white, size: 42),
+                        ),
+                        secondaryBackground: Container(
+                          color: dangerColor,
+                          alignment: Alignment.centerRight,
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: const Icon(CupertinoIcons.trash,
+                              color: CupertinoColors.white, size: 42),
+                        ),
+                        key: ValueKey<int>(snapshot.data![index].id!),
+                        onDismissed: (DismissDirection direction) async {
+                          if (direction == DismissDirection.endToStart) {
+                            showCupertinoModalPopup<void>(
+                              context: context,
+                              builder: (BuildContext context) =>
+                                  CupertinoAlertDialog(
+                                title: const Text('Precaución'),
+                                content: Text(
+                                    'Eliminar ${snapshot.data![index].id!}?'),
+                                actions: <CupertinoDialogAction>[
+                                  CupertinoDialogAction(
+                                    isDefaultAction: true,
+                                    onPressed: () {
+                                      setState(() {
+                                        snapshot.data!
+                                            .remove(snapshot.data![index]);
+                                      });
+                                      Navigator.of(context).pushAndRemoveUntil(
+                                          CupertinoPageRoute(
+                                            builder: (context) => const Home(),
+                                          ),
+                                          (route) => false);
+                                    },
+                                    child: const Text('No'),
+                                  ),
+                                  CupertinoDialogAction(
+                                    isDestructiveAction: true,
+                                    onPressed: () async {
+                                      await deleteEmpleado(
+                                              snapshot.data![index].id!)
+                                          ? setState(() {
+                                              snapshot.data!.remove(
+                                                  snapshot.data![index]);
+                                            })
+                                          : showCupertinoSnackBar(
+                                              context: context,
+                                              message: "Error al eliminar :(");
+                                      Navigator.of(context).pushAndRemoveUntil(
+                                          CupertinoPageRoute(
+                                            builder: (context) => const Home(),
+                                          ),
+                                          (route) => false);
+                                    },
+                                    child: const Text('Yes'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          } else if (direction == DismissDirection.startToEnd) {
+                            Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                builder: (context) => EditEmployee(
+                                  actual: data[index],
+                                ),
+                              ),
+                            );
+                            setState(() {
+                              snapshot.data!.remove(snapshot.data![index]);
+                            });
+                          }
+                        },
+                        child: EmpleadoCard(
+                          empleado: data![index],
+                        ),
                       );
                     });
               } else if (snapshot.hasError) {
@@ -108,7 +195,7 @@ class _EmpleadoCardState extends State<EmpleadoCard> {
                     color: secondaryColor.withOpacity(0.8),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(24.0),
+                    padding: const EdgeInsets.all(10.0),
                     child: Center(
                       child: Text(
                         widget.empleado.id.toString(),
