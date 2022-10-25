@@ -214,7 +214,7 @@ class _EmpleadoCardState extends State<EmpleadoCard> {
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       "${widget.empleado.nombre} ${widget.empleado.apellidop} ${widget.empleado.apellidom}",
-                      style: tsH1Black,
+                      style: tsH2Black,
                     ),
                   ),
                   Container(
@@ -237,7 +237,7 @@ class _EmpleadoCardState extends State<EmpleadoCard> {
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
                   "\$ ${widget.empleado.sueldo.toString()}",
-                  style: tsH2Black,
+                  style: tsH3Black,
                 ),
               ),
               Container(
@@ -246,7 +246,7 @@ class _EmpleadoCardState extends State<EmpleadoCard> {
                 child: Text(
                   "${widget.empleado.fechanac.day}-${widget.empleado.fechanac.month}-${widget.empleado.fechanac.year}",
                   style: TextStyle(
-                    fontSize: 12,
+                    fontSize: 14,
                     fontWeight: FontWeight.w400,
                     color: widget.empleado.fechanac.year < 2004
                         ? successColor

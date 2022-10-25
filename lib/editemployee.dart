@@ -87,7 +87,7 @@ class _EditEmployeeState extends State<EditEmployee> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 80.0, vertical: 32.0),
                     child: const Text(
-                      "Agregar Empleado",
+                      "Editar Empleado",
                       style: tsH3Blue,
                       textAlign: TextAlign.center,
                     ),

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:empleados/models.dart';
 import 'package:http/http.dart' show Client;
 
-const String baseUrl = "192.168.0.89:8080";
+const String baseUrl = "10.0.2.2:8080";
 Client client = Client();
 
 Future<List<Empleado>> getEmpleados() async {
@@ -44,7 +44,7 @@ Future<bool> createEmpleado(Empleado data) async {
 }
 
 Future<bool> updateEmpleado(Empleado data) async {
-  final response = await client.put(
+  final response = await client.patch(
       Uri.http(
         baseUrl,
         "/api/empleados/${data.id}",
