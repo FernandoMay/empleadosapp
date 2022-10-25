@@ -1,3 +1,26 @@
+import 'dart:convert';
+
+Res resFromJson(String str) => Res.fromJson(json.decode(str));
+
+String resToJson(Res data) => json.encode(data.toJson());
+
+class Res {
+  Res({
+    required this.data,
+  });
+
+  List<Empleado> data;
+
+  factory Res.fromJson(Map<String, dynamic> json) => Res(
+        data:
+            List<Empleado>.from(json["data"].map((x) => Empleado.fromJson(x))),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "data": List<dynamic>.from(data.map((x) => x.toJson())),
+      };
+}
+
 class Empleado {
   Empleado({
     this.id,
@@ -15,7 +38,7 @@ class Empleado {
   String apellidom;
   String area;
   DateTime fechanac;
-  double sueldo;
+  int sueldo;
 
   factory Empleado.fromJson(Map<String, dynamic> json) => Empleado(
         id: json["id"]! as int,
@@ -23,17 +46,17 @@ class Empleado {
         apellidop: json["apellidop"]! as String,
         apellidom: json["apellidom"]! as String,
         area: json["area"]! as String,
-        fechanac: json["fechanac"]! as DateTime,
-        sueldo: json["sueldo"]! as double,
+        fechanac: DateTime.parse(json["fechanac"]),
+        sueldo: json["sueldo"]! as int,
       );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
+        // "id": id,
         "nombre": nombre,
         "apellidop": apellidop,
         "apellidom": apellidom,
         "area": area,
-        "fechanac": fechanac,
-        "sueldo": sueldo,
+        "fechanac": fechanac.toString(),
+        "sueldo": sueldo.toString(),
       };
 }

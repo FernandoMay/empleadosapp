@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CupertinoApp(
-      title: 'Innovation Test',
+      title: 'Empleados PdN',
       debugShowCheckedModeBanner: false,
       theme: ctheme(),
       home: Splash(),

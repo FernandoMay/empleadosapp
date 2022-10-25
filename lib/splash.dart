@@ -37,9 +37,12 @@ class _SplashState extends State<Splash> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.asset(
-              "assets/pdn-logo.png",
-              height: 333,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Image.asset(
+                "assets/pdn-logo.png",
+                height: 333,
+              ),
             ),
             const SizedBox(
               height: 42.0,

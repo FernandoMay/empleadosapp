@@ -1,5 +1,7 @@
+import 'package:empleados/addemployee.dart';
 import 'package:empleados/constants.dart';
 import 'package:empleados/models.dart';
+import 'package:empleados/services.dart';
 import 'package:flutter/cupertino.dart';
 
 class Home extends StatefulWidget {
@@ -23,13 +25,25 @@ class _HomeState extends State<Home> {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
         middle: const Text(
-          "Empleados List",
+          "Empleados",
           style: tsH2White,
         ),
         backgroundColor: primaryColor.withOpacity(0.5),
-        leading: ClipRRect(
-          borderRadius: BorderRadius.circular(18),
-          child: Image.network("https://picsum.photos/180"),
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(18),
+            child: Image.network("https://picsum.photos/180"),
+          ),
+        ),
+        trailing: CupertinoButton(
+          onPressed: () => Navigator.of(context).push(
+            CupertinoPageRoute(
+              builder: (context) => AddEmployee(),
+            ),
+          ),
+          padding: EdgeInsets.zero,
+          child: const Icon(CupertinoIcons.person_add, color: secondaryColor),
         ),
       ),
       child: SafeArea(
@@ -74,40 +88,46 @@ class _EmpleadoCardState extends State<EmpleadoCard> {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
+      height: 120,
       padding: const EdgeInsets.symmetric(horizontal: 2.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(24),
-                        color: secondaryColor.withOpacity(0.8),
-                      ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  height: 64,
+                  width: 64,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(50),
+                    color: secondaryColor.withOpacity(0.8),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: Center(
                       child: Text(
                         widget.empleado.id.toString(),
                         style: tsH2White,
                       ),
                     ),
                   ),
+                ),
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Container(
                     //width: MediaQuery.of(context).size.width * 0.8,
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      widget.empleado.nombre +
-                          widget.empleado.apellidom +
-                          widget.empleado.apellidop,
-                      style: tsH3Black,
+                      "${widget.empleado.nombre} ${widget.empleado.apellidop} ${widget.empleado.apellidom}",
+                      style: tsH1Black,
                     ),
                   ),
                   Container(
@@ -120,32 +140,32 @@ class _EmpleadoCardState extends State<EmpleadoCard> {
                   ),
                 ],
               ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Container(
-                    //width: MediaQuery.of(context).size.width * 0.8,
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      widget.empleado.fechanac.toString(),
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w400,
-                        color: widget.empleado.fechanac.year < 2004
-                            ? successColor
-                            : dangerColor,
-                      ),
-                    ),
+            ],
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "\$ ${widget.empleado.sueldo.toString()}",
+                  style: tsH2Black,
+                ),
+              ),
+              Container(
+                //width: MediaQuery.of(context).size.width * 0.8,
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "${widget.empleado.fechanac.day}-${widget.empleado.fechanac.month}-${widget.empleado.fechanac.year}",
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                    color: widget.empleado.fechanac.year < 2004
+                        ? successColor
+                        : dangerColor,
                   ),
-                  Container(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      "\$ ${widget.empleado.sueldo.toString()}",
-                      style: tsH2Black,
-                    ),
-                  ),
-                ],
+                ),
               ),
             ],
           ),
